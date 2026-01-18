@@ -23,7 +23,8 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     new_user = User(
         email=user.email,
         name=user.name,
-        password=hash_password(user.password)
+        password=hash_password(user.password),
+        role=user.role  # si tu modelo tiene role
     )
     db.add(new_user)
     db.commit()
@@ -38,9 +39,3 @@ def login(data: UserLogin, db: Session = Depends(get_db)):
 
     token = create_access_token({"sub": str(user.id)})
     return {"access_token": token, "token_type": "bearer"}
-new_user = User(
-    email=user.email,
-    name=user.name,
-    password=hash_password(user.password),
-    role=user.role
-)
