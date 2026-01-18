@@ -8,3 +8,4 @@ class User(Base):
     email = Column(String, unique=True, index=True)
     name = Column(String)
     password = Column(String)
+    role = Column(String, default="user")  # <-- NUEVO

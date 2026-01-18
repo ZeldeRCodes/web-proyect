@@ -16,3 +16,8 @@ class UserResponse(BaseModel):
 
     class Config:
         orm_mode = True
+class UserCreate(BaseModel):
+    email: str
+    name: str
+    password: str
+    role: str = "user"   # <-- NUEVO
