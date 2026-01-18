@@ -1,0 +1,15 @@
+
+{
+  "name": "web-proyecto",
+  "private": true,
+  "version": "0.0.2",
+  "packageManager": "pnpm@9.0.0",
+  "scripts": {
+    "dev": "pnpm -C apps/api dev & pnpm -C apps/web dev",
+    "build": "pnpm -C apps/api build && pnpm -C apps/web build",
+    "start:api": "pnpm -C apps/api start",
+    "preview:web": "pnpm -C apps/web preview",
+    "lint": "pnpm -C apps/api lint && pnpm -C apps/web lint",
+    "test": "pnpm -C apps/api test && pnpm -C apps/web test"
+  }
+}
