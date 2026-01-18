@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.db.database import SessionLocal
-from app.db.models import User
-from .schemas import UserCreate, UserLogin, UserResponse
-from .security import hash_password, verify_password, create_access_token
+from app.db.models import Category
+from app.auth.deps import require_admin, get_current_user
+from .schemas import CategoryCreate, CategoryResponse
 
-router = APIRouter(prefix="/auth", tags=["Auth"])
+router = APIRouter(prefix="/categories", tags=["Categories"])
 
 def get_db():
     db = SessionLocal()
@@ -14,28 +14,18 @@ def get_db():
     finally:
         db.close()
 
-@router.post("/register", response_model=UserResponse)
-def register(user: UserCreate, db: Session = Depends(get_db)):
-    existing = db.query(User).filter(User.email == user.email).first()
+@router.post("/", response_model=CategoryResponse)
+def create_category(data: CategoryCreate, db: Session = Depends(get_db), user=Depends(require_admin)):
+    existing = db.query(Category).filter(Category.name == data.name).first()
     if existing:
-        raise HTTPException(status_code=400, detail="Email ya registrado")
+        raise HTTPException(status_code=400, detail="La categoría ya existe")
 
-    new_user = User(
-        email=user.email,
-        name=user.name,
-        password=hash_password(user.password),
-        role=user.role  # si tu modelo tiene role
-    )
-    db.add(new_user)
+    new_cat = Category(name=data.name)
+    db.add(new_cat)
     db.commit()
-    db.refresh(new_user)
-    return new_user
+    db.refresh(new_cat)
+    return new_cat
 
-@router.post("/login")
-def login(data: UserLogin, db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.email == data.email).first()
-    if not user or not verify_password(data.password, user.password):
-        raise HTTPException(status_code=400, detail="Credenciales inválidas")
-
-    token = create_access_token({"sub": str(user.id)})
-    return {"access_token": token, "token_type": "bearer"}
+@router.get("/", response_model=list[CategoryResponse])
+def list_categories(db: Session = Depends(get_db), user=Depends(get_current_user)):
+    return db.query(Category).all()
