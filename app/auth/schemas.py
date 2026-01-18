@@ -4,6 +4,7 @@ class UserCreate(BaseModel):
     email: str
     name: str
     password: str
+    role: str = "user"
 
 class UserLogin(BaseModel):
     email: str
@@ -13,11 +14,7 @@ class UserResponse(BaseModel):
     id: int
     email: str
     name: str
+    role: str
 
     class Config:
         orm_mode = True
-class UserCreate(BaseModel):
-    email: str
-    name: str
-    password: str
-    role: str = "user"   # <-- NUEVO
