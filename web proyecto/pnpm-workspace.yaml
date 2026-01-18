@@ -1,4 +1,0 @@
-# web-proyecto/pnpm-workspace.yaml
-packages:
-  - "apps/*"
-  - "shared/*"
