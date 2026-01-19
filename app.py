@@ -1,29 +1,16 @@
-from flask import Flask, request, jsonify
-from db import query_one, execute
-import os
-import uuid
-
-app = Flask(__name__)
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from db import query_one, query_all, execute
 import os
 import uuid
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="static", template_folder="templates")
 
 # -----------------------------
-# RUTA DE PRUEBA
+# FRONTEND
 # -----------------------------
 @app.route("/")
-def home():
-    try:
-        result = query_one("SELECT NOW() AS time;")
-        return jsonify({
-            "status": "ok",
-            "database_time": result["time"]
-        })
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+def serve_frontend():
+    return render_template("index.html")
 
 
 # -----------------------------
@@ -54,7 +41,7 @@ def create_tierlist():
 
 
 # -----------------------------
-# AGREGAR RANGO (S, A, B, C…)
+# AGREGAR RANGO
 # -----------------------------
 @app.route("/api/tierlists/<tierlist_id>/ranges", methods=["POST"])
 def add_range(tierlist_id):
@@ -87,7 +74,7 @@ def add_range(tierlist_id):
 
 
 # -----------------------------
-# AGREGAR ITEM A LA TIERLIST
+# AGREGAR ITEM
 # -----------------------------
 @app.route("/api/tierlists/<tierlist_id>/items", methods=["POST"])
 def add_item(tierlist_id):
@@ -153,6 +140,4 @@ def get_tierlist(tierlist_id):
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
     app.run(host="0.0.0.0", port=port)
-
-
 
