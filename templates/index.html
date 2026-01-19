@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Tester de API - Tierlists</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h2 {
+            margin-top: 40px;
+        }
+        input, textarea {
+            width: 300px;
+            padding: 8px;
+            margin: 5px 0;
+        }
+        button {
+            padding: 10px 15px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        .box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+        pre {
+            background: #222;
+            color: #0f0;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Tester de API - Tierlists</h1>
+
+    <!-- Crear Tierlist -->
+    <div class="box">
+        <h2>Crear Tierlist</h2>
+        <input id="title" placeholder="Título"><br>
+        <textarea id="description" placeholder="Descripción"></textarea><br>
+        <button onclick="crearTierlist()">Crear</button>
+
+        <h3>Respuesta:</h3>
+        <pre id="respCrear"></pre>
+    </div>
+
+    <!-- Crear Rango -->
+    <div class="box">
+        <h2>Agregar Rango</h2>
+        <input id="tierlistIdRango" placeholder="Tierlist ID"><br>
+        <input id="label" placeholder="Label (S, A, B...)"><br>
+        <input id="color" placeholder="Color (#ff0000)"><br>
+        <input id="position" placeholder="Posición (1,2,3...)"><br>
+        <button onclick="crearRango()">Agregar Rango</button>
+
+        <h3>Respuesta:</h3>
+        <pre id="respRango"></pre>
+    </div>
+
+    <!-- Crear Item -->
+    <div class="box">
+        <h2>Agregar Item</h2>
+        <input id="tierlistIdItem" placeholder="Tierlist ID"><br>
+        <input id="image_url" placeholder="URL de imagen"><br>
+        <input id="labelItem" placeholder="Label del item"><br>
+        <button onclick="crearItem()">Agregar Item</button>
+
+        <h3>Respuesta:</h3>
+        <pre id="respItem"></pre>
+    </div>
+
+    <!-- Obtener Tierlist -->
+    <div class="box">
+        <h2>Obtener Tierlist Completa</h2>
+        <input id="tierlistIdGet" placeholder="Tierlist ID"><br>
+        <button onclick="obtenerTierlist()">Obtener</button>
+
+        <h3>Respuesta:</h3>
+        <pre id="respGet"></pre>
+    </div>
+
+<script>
+    const API = "https://web-proyect-production.up.railway.app";
+
+    async function crearTierlist() {
+        const res = await fetch(`${API}/api/tierlists`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                title: document.getElementById("title").value,
+                description: document.getElementById("description").value
+            })
+        });
+        document.getElementById("respCrear").textContent = JSON.stringify(await res.json(), null, 2);
+    }
+
+    async function crearRango() {
+        const id = document.getElementById("tierlistIdRango").value;
+        const res = await fetch(`${API}/api/tierlists/${id}/ranges`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                label: document.getElementById("label").value,
+                color: document.getElementById("color").value,
+                position: parseInt(document.getElementById("position").value)
+            })
+        });
+        document.getElementById("respRango").textContent = JSON.stringify(await res.json(), null, 2);
+    }
+
+    async function crearItem() {
+        const id = document.getElementById("tierlistIdItem").value;
+        const res = await fetch(`${API}/api/tierlists/${id}/items`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                image_url: document.getElementById("image_url").value,
+                label: document.getElementById("labelItem").value
+            })
+        });
+        document.getElementById("respItem").textContent = JSON.stringify(await res.json(), null, 2);
+    }
+
+    async function obtenerTierlist() {
+        const id = document.getElementById("tierlistIdGet").value;
+        const res = await fetch(`${API}/api/tierlists/${id}`);
+        document.getElementById("respGet").textContent = JSON.stringify(await res.json(), null, 2);
+    }
+</script>
+
+</body>
+</html>
