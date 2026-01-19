@@ -99,3 +99,43 @@
                 title: document.getElementById("title").value,
                 description: document.getElementById("description").value
             })
+        });
+        document.getElementById("respCrear").textContent = JSON.stringify(await res.json(), null, 2);
+    }
+
+    async function crearRango() {
+        const id = document.getElementById("tierlistIdRango").value;
+        const res = await fetch(`${API}/api/tierlists/${id}/ranges`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                label: document.getElementById("label").value,
+                color: document.getElementById("color").value,
+                position: parseInt(document.getElementById("position").value)
+            })
+        });
+        document.getElementById("respRango").textContent = JSON.stringify(await res.json(), null, 2);
+    }
+
+    async function crearItem() {
+        const id = document.getElementById("tierlistIdItem").value;
+        const res = await fetch(`${API}/api/tierlists/${id}/items`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                image_url: document.getElementById("image_url").value,
+                label: document.getElementById("labelItem").value
+            })
+        });
+        document.getElementById("respItem").textContent = JSON.stringify(await res.json(), null, 2);
+    }
+
+    async function obtenerTierlist() {
+        const id = document.getElementById("tierlistIdGet").value;
+        const res = await fetch(`${API}/api/tierlists/${id}`);
+        document.getElementById("respGet").textContent = JSON.stringify(await res.json(), null, 2);
+    }
+</script>
+
+</body>
+</html>
