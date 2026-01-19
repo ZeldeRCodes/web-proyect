@@ -20,6 +20,15 @@ def query_one(sql, params=None):
     conn.close()
     return row
 
+def query_all(sql, params=None):
+    conn = get_connection()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute(sql, params or [])
+    rows = cur.fetchall()
+    cur.close()
+    conn.close()
+    return rows
+
 def execute(sql, params=None):
     conn = get_connection()
     cur = conn.cursor()
@@ -27,6 +36,8 @@ def execute(sql, params=None):
     conn.commit()
     cur.close()
     conn.close()
+
+
 
 
 
