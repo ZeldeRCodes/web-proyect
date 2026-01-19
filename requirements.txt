@@ -1,8 +1,3 @@
-fastapi
-uvicorn[standard]
-sqlalchemy
+Flask
 psycopg2-binary
 python-dotenv
-passlib[bcrypt]
-python-jose[cryptography]
-pydantic
