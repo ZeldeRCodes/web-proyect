@@ -1,9 +1,6 @@
 import os
 import psycopg2
 import psycopg2.extras
-from dotenv import load_dotenv
-
-load_dotenv()
 
 def get_connection():
     return psycopg2.connect(
@@ -22,3 +19,12 @@ def query_one(sql, params=None):
     cur.close()
     conn.close()
     return row
+
+def execute(sql, params=None):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute(sql, params or [])
+    conn.commit()
+    cur.close()
+    conn.close()
+
