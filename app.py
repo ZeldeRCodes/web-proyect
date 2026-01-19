@@ -16,6 +16,7 @@ def home():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
+
 # Crear tierlist básica
 @app.route("/api/tierlists", methods=["POST"])
 def create_tierlist():
